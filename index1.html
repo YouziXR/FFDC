@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FF订餐系统</title>
+    <link rel="stylesheet" type="text/css" href="ff.css">
+    <script type="text/javascript" src="jquery-3.3.1.js"></script>
+
+</head>
+<body style="position: absolute;width: 100%;height: 100%">
+<img src="img/ff.png" style="position: absolute;left: 3%;top:5%"/>
+<table class="table" style="width: 280px;height: 190px;text-align: center;position:relative;
+    left:35%;top:40%"  id="form">
+    <tr>
+        <td colspan="2" style="background-color: #dedede;">请选择你要定餐的种类：</td>
+    </tr>
+    <!-- <input type="checkbox" name="checkbox1" value="人事部">人事部
+    <input type="text" name="box1_num">
+    <br/>
+    <input type="checkbox" name="checkbox2" value="财务部">财务部
+    <input type="text" name="box2_num">
+    <br/>
+    <input type="checkbox" name="checkbox3" value="IT部">IT部
+    <input type="text" name="box3_num"> -->
+
+    <!-- <input type="submit" value="确认点餐"> -->
+
+    <tr>
+        <th ><button class="button" onclick="lunch()">午餐</button></th>
+        <th ><button class="button" onclick="dinner()">晚餐</button></th>
+    </tr>
+
+
+
+</table>
+
+</body>
+<script type="text/javascript">
+    var user_oa = location.search.substring(6);
+    console.log(user_oa);
+    // 测试数据010980380
+    // user_oa = '010152250';
+
+    function lunch(argument) {
+        console.log('lunch');
+        window.location.href  = 'order.html?OAID=' + user_oa + '&orderType=' + 'lunch';
+    }
+    function dinner(argument) {
+        console.log('dinner');
+        window.location.href = 'order.html?OAID=' + user_oa + '&orderType=' + 'dinner';
+    }
+
+</script>
+</html>

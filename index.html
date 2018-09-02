@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FF订餐系统</title>
+    <link rel="stylesheet" type="text/css" href="ff.css">
+    <script type="text/javascript" src="jquery-3.3.1.js"></script>
+
+
+</head>
+<body style="position: absolute;width: 100%;height: 100%">
+    <img src="img/ff.png" style="position: absolute;left: 3%;top:5%"/>
+    <table class="table"  style="width: 280px;height: 190px;text-align: center;position:relative;
+    left:35%;top:40%">
+        <tr>
+            <th>用户名</th>
+            <th><input type="text" name="username" id="userid"></th>
+        </tr>
+        <tr>
+            <th>密码</th>
+            <th><input type="password" name="pwd" id="userpwd"></th>
+        </tr>
+        <tr id='submitBtn'>
+            <th colspan="2"><button class="button" onclick="submit()">提交</button> </th>
+        </tr>
+    </table>
+
+</body>
+<script type="text/javascript">
+
+
+
+
+    function submit() {
+        // body...
+        console.log('onsubmit');
+            // alert("in js") ;
+    // str = "14030110034" ;
+    var str1 = document.getElementById( "userid" );
+    var userid = str1.value;
+    var str1 = document.getElementById('userpwd');
+    var password = str1.value;
+    console.log(userid + '+' +userpwd);
+    // alert(str);
+    /*if ( str == "" ) 
+    {
+        alert( "nothing" );
+        // document.getElementById( "txtHint" ).innerHTML = "";
+        return;
+    }*/
+/*    if ( window.XMLHttpRequest ) 
+    {
+        xmlhttp = new XMLHttpRequest( );
+    } 
+    else 
+    {
+        xmlhttp = new ActiveXObject( "Microsoft.XMLHTTP" );
+    }
+    xmlhttp.onreadystatechange = function( ) 
+    {
+        if ( xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+        {
+            console.log('connect success')
+            // document.getElementById( "txtHint" ).innerHTML = xmlhttp.responseText;
+            var response = xmlhttp.responseText;
+            // console.log(xmlhttp.responseText);
+            var obj = JSON.parse(response);
+            console.log(obj);
+            if (obj.success == "normal") 
+            {
+                // document.getElementById("txtHint").innerHTML = "no such record";
+                console.log('normal');
+                return ;
+            }
+            if (obj.success == "super") {
+                console.log('super');
+            }
+            // show_img();
+            if (obj.fail == false) {
+                console.log('false');
+            }
+        }
+    }
+    xmlhttp.open( "POST", 'http://10.82.141.37:8080/demo/superadmin/login' ,false);
+    xmlhttp.setRequestHeader("Content-Type", 'application/json');
+    // var content = 'userid=' + userid + '&password=' + password;
+    var content = {
+        "userid" : userid,
+        "password" : password
+    }*/
+    // console.log(content1 + content2);
+    /*var stringData=JSON.stringify(content);
+    xmlhttp.send();*/
+    // show_img();
+
+    
+    var content = {
+        "userid" : userid,
+        "password" : password
+    };
+    $.ajax({
+        type: "post",
+        url:  'http://112.74.37.68:8080/demo/superadmin/login',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(content),
+        dataType: "json",
+        success: function (data) {
+            // console.log(data.success);
+            if (data.success == 'normal') 
+            {
+                // 在这里跳转至index1，如果你不想跳转，就弹出一个框，一个选午餐，一个选晚餐，
+                window.location.href = 'index1.html?OAID=' + userid;
+            };
+            if (data.success == 'super') 
+            {
+                window.location.href = 'index2.html';
+            }
+            if (data.fail == false) 
+            {
+                console.log('pwd err');
+                var warning ='用户名或密码错误';
+                var el = document.createElement('p');
+                el.innerHTML = warning;
+                var btn = document.getElementById('submitBtn');
+                btn.appendChild(el);
+            }
+
+        },
+        error:function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    
+ 
+    /*function getTestJson() {
+        var Json = {
+            "a":"aaaaaaa",
+            "b":0,
+            "c":2,
+        };
+        return Json;
+    }*/
+ 
+        });
+}
+</script>
+
+
+</html>

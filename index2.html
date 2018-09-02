@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FF点餐系统</title>
+    <link rel="stylesheet" type="text/css" href="ff.css"/>
+    
+	<script type="text/javascript" src="jquery-3.3.1.js"></script>
+    <script>
+	window.onload = method('lunch');	
+	function method(options) {
+		
+		$.ajax({
+        type: "get",
+        url:  'http://112.74.37.68:8080/demo/superadmin/summary',
+        dataType: "json",
+        success: function (data) {
+			console.log(data);
+			var dinner;
+			var total;
+			if(options=='lunch')
+			{
+				//午餐
+   				var dinner=data.lunch;
+				total=data.lunch_total;
+				document.getElementById("title").innerHTML='午餐报餐情况';
+			
+			}
+			else if(options=='dinner')
+			{
+				//晚餐
+				var dinner=data.dinner;
+				total=data.dinner_total;
+				document.getElementById("title").innerHTML='晚餐报餐情况';
+			}
+			
+			 $("#tab").empty();
+			 
+			 $("#tab").append('<tr><th>部门</th><th>报餐人</th><th>订餐数</th><th>备注</th></tr>');
+            //console.log(dinner[0].department);
+			$(document).ready(function() {
+				
+                var s = "";
+				
+                for(var i = 0; i < dinner.length; i++) {
+					  s = "<tr><th>" + dinner[i].department + "</th><th>" +dinner[i].realName+"</th><th>"+ dinner[i].orderCounts + "</th><th>" +
+                        dinner[i].description + "</th></tr>";
+                    $("#tab").append(s);
+                }
+				
+				$("#tab").append("<tr><td colspan='4' align='center'><br></td></tr>");
+				s="<tr><th colspan='2' >" +'总计:'+"</th><th colspan='2'>"+ total  + "</th></tr>"
+				$("#tab").append(s);
+				s="<tr><th colspan='2'>" +'时间:'+"</th><th colspan='2'>"+ data.date  + "</th></tr>"
+				$("#tab").append(s);
+            });
+
+			
+         
+        },
+        error:function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+ 
+        });
+	}
+</script>
+</head>
+<body>
+<div align="center" >
+<button onclick="method('lunch')" class="button">午餐报餐情况</button>
+<button onClick="method('dinner')"  class="button">晚餐预定情况</button>
+</div>
+
+<div align="center" id='title'>午餐订餐情况</div>
+<div align="center">
+<table border="1" align='center' id='tab' class="table">
+  <tr>
+    <th>部门</th>
+    <th>报餐人</th>
+    <th>订餐数</th>
+    <th>备注</th>
+  </tr>
+</table>
+
+</div>
+</body>
+
+
+</html>
