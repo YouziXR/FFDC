@@ -1,184 +1,186 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>FF订餐系统</title>
-	<!-- <script type="text/javascript" src="vue.min.js"></script> -->
-	<link rel="stylesheet" type="text/css" href="ff.css">
-	<script type="text/javascript" src="jquery-3.3.1.js"></script>
+    <meta charset="UTF-8">
+    <title>FF订餐系统</title>
+    <!-- <script type="text/javascript" src="vue.min.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="ff.css">
+    <script type="text/javascript" src="jquery-3.3.1.js"></script>
 </head>
 <body style="position: absolute;width: 100%;height: 100%">
-	<!-- <button onclick=""></button> -->
-	<img src="img/ff.png" style="position: absolute;left: 3%;top:5%"/>
-	<table class="table" id="div" style="width: 280px;height: 200px;text-align: center;position:relative;overflow:
+<!-- <button onclick=""></button> -->
+<img src="img/ff.png" style="position: absolute;left: 3%;top:5%"/>
+<table class="table" id="div" style="width: 280px;height: 200px;text-align: center;position:relative;overflow:
 	auto;
     left:35%;top:40%">
-	</table>
+</table>
 </body>
 <script type="text/javascript">
-	var str = location.search.substring(6);
-	// var type = location.search.substring(6)
-	var str = str.split('&');
-	var user_oa = str[0];
-	var type = str[1].split('=')[1];
-	console.log(user_oa);console.log(type);
-	var content = {
-		"user_oa": user_oa,
-		"reserve_type": type
-	}
-	
-	window.onload = function(argument) {
-		$.ajax({
-        type: "post",
-        url:  'http://112.74.37.68:8080/demo/superadmin/department',
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(content),
-        dataType: "json",
-        success: function (data) {
-            console.log('order connect success');
-            console.log(data);
-            var div = document.getElementById('div');
-            var order_type = document.createElement('p');
-            $(div).append(order_type);
-            	if (type == 'lunch') {
-            		$(order_type).html('当前预订： 午餐');
-            	}
-            	if (type == 'dinner') {
-            		$(order_type).html('当前预订： 晚餐');
-            	}
-            for (var i = 0; i < data.length ;i++) {
-            	// var tmp = document.createElement('button');
-            	var dt = data[i];
-            	var tmp = document.createElement('p');
-            	var tr = document.createElement('tr');
-            	var th = document.createElement('th');
+    var str = location.search.substring(6);
+    // var type = location.search.substring(6)
+    var str = str.split('&');
+    var user_oa = str[0];
+    var type = str[1].split('=')[1];
+    console.log(user_oa);
+    console.log(type);
+    var content = {
+        "user_oa": user_oa,
+        "reserve_type": type
+    }
+
+    window.onload = function (argument) {
+        $.ajax({
+            type: "post",
+            url: 'http://112.74.37.68:8080/demo/superadmin/department',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(content),
+            dataType: "json",
+            success: function (data) {
+                console.log('order connect success');
+                console.log(data);
+                var div = document.getElementById('div');
+                var tmpEle = document.createElement('tr');
+                var order_type = document.createElement("th");
+                $(tmpEle).append(order_type);
+                $(div).append(tmpEle);
+                if (type == 'lunch') {
+                    $(order_type).html('当前预订： 午餐');
+                }
+                if (type == 'dinner') {
+                    $(order_type).html('当前预订： 晚餐');
+                }
+                for (var i = 0; i < data.length; i++) {
+                    // var tmp = document.createElement('button');
+                    var dt = data[i];
+                    var tmp = document.createElement('p');
+                    var tr = document.createElement('tr');
+                    var th = document.createElement('th');
 
 // 　              $(tmp).attr("type","button");
-　          　  $(tmp).html('部门：'+ dt.d_name + '，已预订:');
-				var txt = document.createElement('input');
-				$(txt).attr('value',dt.count);
-				// $(txt).attr('id','id' + dt.d_id);
-				// $(tmp).attr("dname",dt.d_name);
-				// tmp.setAttribute('dname',dt.d_name);
-				// tmp.setAttribute('did',dt.d_id);
-				// tmp.setAttribute('dname',dt.d_name)
-				$(txt).attr('departmentid',dt.d_id);
-				txt.addEventListener("change",function (event) {
-					// console.log(txt.getAttribute('value'))
-					console.log(event);
-					console.log(event.target.value);
-					var dcount = event.target.value;
-					console.log(event.target.outerHTML)
-					var did = event.target.outerHTML.split(" ")[2];
+                    $(tmp).html('部门：' + dt.d_name + '，已预订:');
+                    var txt = document.createElement('input');
+                    $(txt).attr('value', dt.count);
+                    // $(txt).attr('id','id' + dt.d_id);
+                    // $(tmp).attr("dname",dt.d_name);
+                    // tmp.setAttribute('dname',dt.d_name);
+                    // tmp.setAttribute('did',dt.d_id);
+                    // tmp.setAttribute('dname',dt.d_name)
+                    $(txt).attr('departmentid', dt.d_id);
+                    txt.addEventListener("change", function (event) {
+                        // console.log(txt.getAttribute('value'))
+                        console.log(event);
+                        console.log(event.target.value);
+                        var dcount = event.target.value;
+                        console.log(event.target.outerHTML)
+                        var did = event.target.outerHTML.split(" ")[2];
 
-					console.log(did);
-					did = did.split("\"")[1];
-					console.log(did);
-					var submitOrder = {
-						"user_oa": user_oa,
-						"d_id": did,
-						"order_count": dcount,
-						"remarks": '',
-						"reserve_type": type
-					}
-					$.ajax({
-       				type: "post",
-        			url:  'http://112.74.37.68:8080/demo/superadmin/order',
-        			contentType: "application/json; charset=utf-8",
-     			    data: JSON.stringify(submitOrder),
-        			dataType: "json",
-        			
-        			success: function (data) {
-            		console.log('提交 connect success');
-            		console.log(data);
-            		if (data.code == 1) 
-            			{
-            				console.log("订餐成功");
-            				alert("订餐成功");
-            			}
-            			else {
-            				console.log("订餐失败");
-            				alert("订餐失败");
-            			}
-        			},
-        			error:function (XMLHttpRequest, textStatus, errorThrown) {
-          			alert(XMLHttpRequest.status);
-            		alert(XMLHttpRequest.readyState);
-            		alert(textStatus);
-       				 }
-       				 });
-				})
-				var btn = document.createElement('button');
-				$(btn).attr("type","button");
-				$(btn).html('提交');
-				$(btn).attr("class","button")
-				btn.addEventListener("click",function (event) {
-					// body...
-					
-					console.log(event);
-					var tar = event.target;
-					var element = document.getElementById('id' + dt.d_id);
-					console.log(element);
-					// console.log(element.getAttribute('value'));
-				})
-          /*  　　$(btn).click(function(event){
-            		// console.log(txt.getAttribute("value"));
-            		// var count_test = $(txt).attr('value');
-            		console.log(event);
-					var tar = event.target;
-					// var element = document.getElementById('id' + dt.d_id);
-					// console.log(element);
-					// console.log(element.getAttribute('value'));
-					var submitOrder = {
-						"user_oa": user_oa,
-						"d_id": dt.d_id,
-						"order_count": txt.getAttribute("value"),
-						"remarks": '',
-						"reserve_type": type
-					}
-					$.ajax({
-       				type: "post",
-        			url:  'http://10.82.141.37:8080/demo/superadmin/order',
-        			contentType: "application/json; charset=utf-8",
-     			    data: JSON.stringify(submitOrder),
-        			dataType: "json",
-        			
-        			success: function (data) {
-            		console.log('提交 connect success');
-            		console.log(data);
-            		if (data.code == 1) 
-            			{
-            				console.log("订餐成功");
-            				alert("订餐成功");
-            			}
-            			else {
-            				console.log("订餐失败");
-            				alert("订餐失败");
-            			}
-        			},
-        			error:function (XMLHttpRequest, textStatus, errorThrown) {
-          			alert(XMLHttpRequest.status);
-            		alert(XMLHttpRequest.readyState);
-            		alert(textStatus);
-       				 }
-       				 });
-　　　　       　})*/
-				th.appendChild(tmp);
-				th.appendChild(txt);
-				th.appendChild(btn);
-                tr.appendChild(th);
-                div.appendChild(tr);
-            	// div.appendChild(tmp);
+                        console.log(did);
+                        did = did.split("\"")[1];
+                        console.log(did);
+                        var submitOrder = {
+                            "user_oa": user_oa,
+                            "d_id": did,
+                            "order_count": dcount,
+                            "remarks": '',
+                            "reserve_type": type
+                        }
+                        $.ajax({
+                            type: "post",
+                            url: 'http://112.74.37.68:8080/demo/superadmin/order',
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(submitOrder),
+                            dataType: "json",
+
+                            success: function (data) {
+                                console.log('提交 connect success');
+                                console.log(data);
+                                if (data.code == 1) {
+                                    console.log("订餐成功");
+                                    alert("订餐成功");
+                                }
+                                else {
+                                    console.log("订餐失败");
+                                    alert("订餐失败");
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                alert(XMLHttpRequest.status);
+                                alert(XMLHttpRequest.readyState);
+                                alert(textStatus);
+                            }
+                        });
+                    })
+                    var btn = document.createElement('button');
+                    $(btn).attr("type", "button");
+                    $(btn).html('提交');
+                    $(btn).attr("class", "button")
+                    btn.addEventListener("click", function (event) {
+                        // body...
+
+                        console.log(event);
+                        var tar = event.target;
+                        var element = document.getElementById('id' + dt.d_id);
+                        console.log(element);
+                        // console.log(element.getAttribute('value'));
+                    })
+                    /*  　　$(btn).click(function(event){
+                              // console.log(txt.getAttribute("value"));
+                              // var count_test = $(txt).attr('value');
+                              console.log(event);
+                              var tar = event.target;
+                              // var element = document.getElementById('id' + dt.d_id);
+                              // console.log(element);
+                              // console.log(element.getAttribute('value'));
+                              var submitOrder = {
+                                  "user_oa": user_oa,
+                                  "d_id": dt.d_id,
+                                  "order_count": txt.getAttribute("value"),
+                                  "remarks": '',
+                                  "reserve_type": type
+                              }
+                              $.ajax({
+                                 type: "post",
+                              url:  'http://10.82.141.37:8080/demo/superadmin/order',
+                              contentType: "application/json; charset=utf-8",
+                               data: JSON.stringify(submitOrder),
+                              dataType: "json",
+
+                              success: function (data) {
+                              console.log('提交 connect success');
+                              console.log(data);
+                              if (data.code == 1)
+                                  {
+                                      console.log("订餐成功");
+                                      alert("订餐成功");
+                                  }
+                                  else {
+                                      console.log("订餐失败");
+                                      alert("订餐失败");
+                                  }
+                              },
+                              error:function (XMLHttpRequest, textStatus, errorThrown) {
+                                alert(XMLHttpRequest.status);
+                              alert(XMLHttpRequest.readyState);
+                              alert(textStatus);
+                                  }
+                                  });
+          　　　　       　})*/
+                    th.appendChild(tmp);
+                    th.appendChild(txt);
+                    th.appendChild(btn);
+                    tr.appendChild(th);
+                    div.appendChild(tr);
+                    // div.appendChild(tmp);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
             }
-        },
-        error:function (XMLHttpRequest, textStatus, errorThrown) {
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
         });
-	}
-	
-	
+    }
+
+
 </script>
 </html>
